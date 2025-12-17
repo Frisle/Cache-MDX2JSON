@@ -202,8 +202,8 @@ ClassMethod ProcessDirectory(Path As %String = "", Request As %Net.HttpRequest, 
 	Return:((Request.HttpResponse.StatusCode = 403) && (Request.HttpResponse.GetHeader("X-RATELIMIT-REMAINING")=0)) $$$ERROR($$$GeneralError,"API rate limit exceeded. Try logging in.")
  	Return:(Request.HttpResponse.StatusCode '= 200) $$$ERROR($$$GeneralError,"Received " _ Request.HttpResponse.StatusCode _ " status, expected 200")
 
- 	#dim objects As List of %ZEN.proxyObject
- 	#dim obj As %ZEN.proxyObject
+ 	#dim objects As List of %Library.DynamicObject
+ 	#dim obj As %Library.DynamicObject
 	Set st = ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(Request.HttpResponse.Data,,.objects,1)
 	Return:$$$ISERR(st) st
 
@@ -223,7 +223,7 @@ ClassMethod ProcessDirectory(Path As %String = "", Request As %Net.HttpRequest, 
 }
 
 /// Check that incoming file is the one you need.
-ClassMethod IsCacheFile(File As %ZEN.proxyObject) As %Boolean
+ClassMethod IsCacheFile(File As %Library.DynamicObject) As %Boolean
 {
 	Set extensions = ",xml,cls,csp,csr,mac,int,bas,inc,gbl,prj,obj,pkg,gof,"
 	Return:($L(File.name,".")=1) 0 //no extension

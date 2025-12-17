@@ -5,9 +5,9 @@ Include MDX2JSON.MDX2JSON
 Class MDX2JSON.ResultSet Extends %DeepSee.ResultSet
 {
 
-/// Converts ResultSet to %ZEN.proxyObject.<br>
+/// Converts ResultSet to %Library.DynamicObject.<br>
 /// <b>pStatus</b> - Status of execution.<br>
-Method ToProxyObject(Output pStatus As %Status) As %ZEN.proxyObject
+Method ToProxyObject(Output pStatus As %Status) As %Library.DynamicObject
 {
 	set ^DeepSee.QueryLog($UserName,$I(^DeepSee.QueryLog($UserName))) = ..%GetQueryText()
 	set status = $$$ERROR($$$GeneralError,"Error occured while executing ##class(MDX2JSON.ResultSet).ToProxyObject() method")
@@ -47,7 +47,7 @@ Method ToProxyObject(Output pStatus As %Status) As %ZEN.proxyObject
 }
 
 /// Returns meta-information about ResultSet.
-Method InfoToProxyObject() As %ZEN.proxyObject
+Method InfoToProxyObject() As %Library.DynamicObject
 {
 	set tCubeIndex = ..%CubeKey
 	set tQueryKey = ..%QueryKey
@@ -109,7 +109,7 @@ Method AxesToListOfObjects() As %ListOfObjects
 	return axes
 }
 
-Method ProcessOneAxis(CubeIndex, AxisKey, AxisNumber) As %ZEN.proxyObject [ Internal ]
+Method ProcessOneAxis(CubeIndex, AxisKey, AxisNumber) As %Library.DynamicObject [ Internal ]
 {
 	set tCubeName = $$$UPPER(..%Cube)
 	set tQueryKey = ..%QueryKey
@@ -120,7 +120,7 @@ Method ProcessOneAxis(CubeIndex, AxisKey, AxisNumber) As %ZEN.proxyObject [ Inte
 	return axis
 }
 
-Method ProcessOneAxisCell(CubeIndex, AxisKey, CubeName, QueryKey, AxisNumber, Node) As %ZEN.proxyObject [ Internal ]
+Method ProcessOneAxisCell(CubeIndex, AxisKey, CubeName, QueryKey, AxisNumber, Node) As %Library.DynamicObject [ Internal ]
 {
 	set cell=$$$NewDynObj
 
@@ -137,7 +137,7 @@ Method ProcessOneAxisCell(CubeIndex, AxisKey, CubeName, QueryKey, AxisNumber, No
 			set children = ..ProcessOneAxisCell(CubeIndex, AxisKey, CubeName, QueryKey, AxisNumber, key)
 			// Append children to cell
 			if $isobject(children) {
-				if ((children.%IsA("%ZEN.proxyObject")) || (children.%IsA("%Library.Object"))) {
+				if ((children.%IsA("%Library.DynamicObject")) || (children.%IsA("%Library.Object"))) {
 					$$$Insert(cell.children,children)
 				} elseif ((children.%IsA("%Collection.AbstractList")) || (children.%IsA("%Library.Array"))) {
 					for i=1:1:$$$ListSize(children) {

@@ -397,7 +397,7 @@ ClassMethod GetTermList(pTermList As %String)
 	set st = $$$OK
 	try {
 		do ##class(%DeepSee.TermList).%GetValueArray(pTermList,.pArray)
-		set obj = ##class(%ZEN.proxyObject).%New()
+		set obj = ##class(%Library.DynamicObject).%New()
 		m obj.%data = pArray
 		set st = obj.%ToJSON()
 	} catch ex {
@@ -497,7 +497,7 @@ ClassMethod GetFormat() As %Status
 	set datelist="DD Mmm [YY]YY^MM/DD/[YY]^DD Mmm [YY]YY^YYYY-MM-DD^DD/MM/[YY]YY^Mmm D, YYYY^Mmm D YYYY^Mmm DD [YY]YY^YYYYMMDD^Mmmmmm D, YYYY^W^Www^Wwwwww^[D]D/[M]M/YYYY^nnn"	
 	set timelist="hh:mm:ss,hh:mm,hh:mm:ss[AM/PM],hh:mm[AM/PM]" // lists taken from %CSP.UI.Portal.NLSEdit - DrawProperties
 	set proplist = "AM,DateSeparator,DecimalSeparator,MinusSign,MonthAbbr,MonthName,NumericGroupSeparator,NumericGroupSize,PM,PlusSign,TimePrecision,TimeSeparator,WeekdayAbbr,WeekdayName"
-	set obj = ##class(%ZEN.proxyObject).%New()
+	set obj = ##class(%Library.DynamicObject).%New()
 	
 	try {
 		for i = 1:1:$L(proplist, ",") {
@@ -516,7 +516,7 @@ ClassMethod GetFormat() As %Status
 	return st
 }
 
-ClassMethod ExecuteAction(Cube As %String, Action As %String, Context As %ZEN.proxyObject = {##class(%ZEN.proxyObject).%New()}) As %Status
+ClassMethod ExecuteAction(Cube As %String, Action As %String, Context As %Library.DynamicObject = {##class(%Library.DynamicObject).%New()}) As %Status
 {
 	set st = $$$OK
 	set Cube = $$$UPPER(Cube)
@@ -626,7 +626,7 @@ ClassMethod CreateAddonClass(Class As %Dictionary.CacheClassname) As %Status
 
 /// Add new widgets and edit existing ones directly from DeepSeeWeb
 /// it takes widget name(key) as unique identifier as string, dashboard name as string
-/// and object with parameters as zen.proxyObject
+/// and object with parameters as %Library.DynamicObject
 ClassMethod AddWidget(sWidget As %String, sDashboard As %String, key As %String) As %Status
 {
 	set st = $$$OK
@@ -740,7 +740,7 @@ ClassMethod DeleteWidget(wName As %String, sDashboard As %String) As %Status
 }
 
 /// the collection of necessary parameters for building widget 
-ClassMethod UpdateWidget(widgetToUpdate As %DeepSee.Dashboard.Widget, data As %ZEN.proxyObject) As %Status
+ClassMethod UpdateWidget(widgetToUpdate As %DeepSee.Dashboard.Widget, data As %Library.DynamicObject) As %Status
 {
 	set st = $$$OK
 

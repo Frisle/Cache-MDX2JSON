@@ -54,7 +54,7 @@ ClassMethod OnPreDispatch(pUrl As %String, pMethod As %String, ByRef pContinue A
 ClassMethod ConvertRequestBody() As %Status
 {
 	#dim %request As %CSP.Request
-	#dim obj As %ZEN.proxyObject
+	#dim obj As %Library.DynamicObject
 
 	return:'$isobject(%request.Content) $$$OK //empty request body - nothing to do
 

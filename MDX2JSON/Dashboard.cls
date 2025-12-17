@@ -75,7 +75,7 @@ ClassMethod OpenDashboardByName(DashName As %Integer, Output Dashboard As %DeepS
 }
 
 /// Converts %DeepSee.Dashboard.Definition widgets into %ZEN.proxyObject.
-ClassMethod WidgetsToProxyObject(Dashboard As %DeepSee.Dashboard.Definition, Output Widgetlist As %ZEN.proxyObject) As %Status
+ClassMethod WidgetsToProxyObject(Dashboard As %DeepSee.Dashboard.Definition, Output Widgetlist As %Library.DynamicObject) As %Status
 {
 	#Dim widget As %DeepSee.Dashboard.Widget
 	
@@ -133,7 +133,7 @@ ClassMethod GetCubeMeasuresDataType(Widget, Number, CubeName, Output DataType As
 }
 
 /// Converts relevant parts of %DeepSee.Dashboard.Widget object into %ZEN.proxyObject.
-ClassMethod WidgetToProxyObject(Widget As %DeepSee.Dashboard.Widget, CubeName As %String) As %ZEN.proxyObject [ Internal ]
+ClassMethod WidgetToProxyObject(Widget As %DeepSee.Dashboard.Widget, CubeName As %String) As %Library.DynamicObject [ Internal ]
 {
 	set obj = $$$NewDynObj
 
@@ -211,7 +211,7 @@ ClassMethod WidgetToProxyObject(Widget As %DeepSee.Dashboard.Widget, CubeName As
 		do {
 			set overridestr = Widget.overrides.GetNext(.key) // we take DeepSee widget override string (in "json" format)
 			quit:key=""
-			do ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(overridestr,,.override,1) // convert it into %ZEN.proxyObject
+			do ##class(%ZEN.Auxiliary.jsonProvider).%ConvertJSONToObject(overridestr,,.override,1) // convert it into %Library.DynamicObject
 			if $IsObject(override) {
 				$$$Insert(obj.overrides,override)
 			}
@@ -247,7 +247,7 @@ ClassMethod WidgetDataPropertyToProxyObject(dataProperty As %DeepSee.Dashboard.D
 	quit obj
 }
 
-ClassMethod ProcesscomboChart(Widget As %DeepSee.Dashboard.Widget, Obj As %ZEN.proxyObject)
+ClassMethod ProcesscomboChart(Widget As %DeepSee.Dashboard.Widget, Obj As %Library.DynamicObject)
 {
 
 	set Obj.seriesTypes = $$$NewDynDTList
@@ -257,12 +257,12 @@ ClassMethod ProcesscomboChart(Widget As %DeepSee.Dashboard.Widget, Obj As %ZEN.p
 	}
 }
 
-ClassMethod ProcesstreeMapChart(Widget As %DeepSee.Dashboard.Widget, Obj As %ZEN.proxyObject)
+ClassMethod ProcesstreeMapChart(Widget As %DeepSee.Dashboard.Widget, Obj As %Library.DynamicObject)
 {
 	do ..ProcesscomboChart(Widget, Obj)
 }
 
-ClassMethod ProcesstextMeter(Widget As %DeepSee.Dashboard.Widget, Obj As %ZEN.proxyObject)
+ClassMethod ProcesstextMeter(Widget As %DeepSee.Dashboard.Widget, Obj As %Library.DynamicObject)
 {
 	set Obj.dataProperties = $$$NewDynDTList
 	for i=1:1:Widget.dataProperties.Count()
@@ -282,7 +282,7 @@ ClassMethod ProcesstextMeter(Widget As %DeepSee.Dashboard.Widget, Obj As %ZEN.pr
 }
 
 /// Converts %DeepSee.Dashboard.Control object into %ZEN.proxyObject, handles run-time DeepSee variables.
-ClassMethod WidgetControlToProxyObject(Widget As %DeepSee.Dashboard.Widget, Number As %Integer, CubeName As %String) As %ZEN.proxyObject [ Internal ]
+ClassMethod WidgetControlToProxyObject(Widget As %DeepSee.Dashboard.Widget, Number As %Integer, CubeName As %String) As %Library.DynamicObject [ Internal ]
 {
 	set obj = $$$NewDynObj
 	set st = Widget.controls.GetAt(Number).%CopyTo(obj) // copy widget control properties to proxyObj
@@ -352,7 +352,7 @@ ClassMethod GetMdx(pPivotName As %String, Output MDX, Output BaseMDX) As %Status
 }
 
 /// Return list of possible filter member values for a given dashboard data source and filter.
-/// Returns list of %ZEN.proxyObject:<br/>
+/// Returns list of %Library.DynamicObject:<br/>
 ClassMethod GetMembersForFilter(DataSource As %String, Filter As %String) As %ListOfObjects
 {
 	set st = ##class(%DeepSee.Dashboard.Utils).%GetMembersForFilter(DataSource,Filter,.tMembers,.tDefaultFilterValue,,.tRelatedFilters,0,,.tValueList)
@@ -370,8 +370,8 @@ ClassMethod GetMembersForFilter(DataSource As %String, Filter As %String) As %Li
 	return members
 }
 
-/// Converts %DeepSee.Dashboard.Definition display information into %ZEN.proxyObject.
-ClassMethod GetDashboardDisplayInfo(Dashboard As %DeepSee.Dashboard.Definition) As %ZEN.proxyObject
+/// Converts %DeepSee.Dashboard.Definition display information into %Library.DynamicObject.
+ClassMethod GetDashboardDisplayInfo(Dashboard As %DeepSee.Dashboard.Definition) As %Library.DynamicObject
 {
 	set DisplayInfo = $$$NewDynObj
 	set DisplayInfo.snapToGrid = Dashboard.snapTo // Dashboard is in "snap to grid" mode.
@@ -381,8 +381,8 @@ ClassMethod GetDashboardDisplayInfo(Dashboard As %DeepSee.Dashboard.Definition) 
 	return DisplayInfo
 }
 
-/// Converts %DeepSee.Dashboard.Widget display information into %ZEN.proxyObject.
-ClassMethod GetWidgetDisplayInfo(Widget As %DeepSee.Dashboard.Widget) As %ZEN.proxyObject
+/// Converts %DeepSee.Dashboard.Widget display information into %Library.DynamicObject.
+ClassMethod GetWidgetDisplayInfo(Widget As %DeepSee.Dashboard.Widget) As %Library.DynamicObject
 {
 	set DisplayInfo = $$$NewDynObj
 
@@ -398,8 +398,8 @@ ClassMethod GetWidgetDisplayInfo(Widget As %DeepSee.Dashboard.Widget) As %ZEN.pr
 	return DisplayInfo
 }
 
-/// Converts %DeepSee.Dashboard.Definition display information into %ZEN.proxyObject.
-ClassMethod GetDashboardInfo(Dashboard As %DeepSee.Dashboard.Definition) As %ZEN.proxyObject
+/// Converts %DeepSee.Dashboard.Definition display information into %Library.DynamicObject.
+ClassMethod GetDashboardInfo(Dashboard As %DeepSee.Dashboard.Definition) As %Library.DynamicObject
 {
 	set Info = $$$NewDynObj
 	set Info.title = ##class(%DeepSee.UserPortal.Utils).%ResolveText(Dashboard.title)
